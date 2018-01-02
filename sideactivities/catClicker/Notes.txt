@@ -1,0 +1,3 @@
+Notes:
+	- Make Scalable
+	- Counter for each cat, not same counter?

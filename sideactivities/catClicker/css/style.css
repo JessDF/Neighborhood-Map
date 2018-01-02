@@ -1,0 +1,17 @@
+* {
+	box-sizing:border-box;
+}
+body {
+	background-color: lightblue;
+}
+.catImage {
+	text-align: center;
+}
+#name1 {
+	float: left;
+	padding-left: 20%;
+}
+#name2 {
+	float: right;
+	padding-right: 20%;
+}
