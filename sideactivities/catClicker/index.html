@@ -5,38 +5,19 @@
     <title>Cat Clicker</title>
 </head>
 <body>
-	<div id="catlist">
-		<button id='button1'>cat 1</button>
-		<button id='button2'>cat 2</button>
-		<button id='button3'>cat 3</button>
-		<button id='button4'>cat 4</button>
-		<button id='button5'>cat 5</button>
+    <ul id="list"></ul>
+    <div id="cat">
+        <h2 id="name"></h2>
+        <p id="count"></p>
+        <img id="img" src="" alt="a cat pic">
+    </div>
+	<button id="adminbutton">Admin</button>
+	<div id="adminview">
+		Name: <input type="text" name="aName" value="" id="aName">
+		Count: <input type="text" name="aCount" value="" id="aCount">
+		Image-url: <input type="text" name="aUrl" value="" id="aUrl">
+		<button id="savebutton">Save</button>
 	</div>
-	<div class="cat" id="cat1">
-		<span class="counter">0</span> clicks
-		<br>
-   		<img class="clicker" src="cat_picture1.jpg">
-   	</div>
-   	<div class="cat" id="cat2">
-		<span class="counter">0</span> clicks
-		<br>
-   		<img class="clicker" src="cat_picture2.jpeg">
-   	</div>
-   	<div class="cat" id="cat3">
-		<span class="counter">0</span> clicks
-		<br>
-   		<img class="clicker" src="cat_picture3.jpeg">
-   	</div>
-   	<div class="cat" id="cat4">
-		<span class="counter">0</span> clicks
-		<br>
-   		<img class="clicker" src="cat_picture4.jpeg">
-   	</div>
-   	<div class="cat" id="cat5">
-		<span class="counter">0</span> clicks
-		<br>
-   		<img class="clicker" src="cat_picture5.jpeg">
-   	</div>
 </body>
 </html>
 <script src="js/libs/jquery.min.js"></script>
