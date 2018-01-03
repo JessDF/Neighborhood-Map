@@ -1,3 +1,2 @@
-Notes:
-	- Make Scalable
-	- Counter for each cat, not same counter?
+Using Andy's spaghette code now as a base:
+https://github.com/udacity/ud989-cat-clicker-andy

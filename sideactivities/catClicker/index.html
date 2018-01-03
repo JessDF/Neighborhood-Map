@@ -3,19 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Cat Clicker</title>
-    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<button type="button" id="my-elem">Click Me!</button>
-	<div class="catImage">
-		<!-- <span id="name1">cat 1</span>
-		<span id="name2">cat 2</span> <br>
-		<img src="cat.jpg" alt="Cat Image" onclick="updateCounter()">
-		<img src="chewie.jpg" alt="Cat Image" onclick="updateCounter()">
-		<h1 id="counter">counter</h1> -->
+	<div id="catlist">
+		<button id='button1'>cat 1</button>
+		<button id='button2'>cat 2</button>
+		<button id='button3'>cat 3</button>
+		<button id='button4'>cat 4</button>
+		<button id='button5'>cat 5</button>
 	</div>
-    <script src="js/libs/jquery.min.js"></script>
-    <script src="js/script.js"></script>
-	
+	<div class="cat" id="cat1">
+		<span class="counter">0</span> clicks
+		<br>
+   		<img class="clicker" src="cat_picture1.jpg">
+   	</div>
+   	<div class="cat" id="cat2">
+		<span class="counter">0</span> clicks
+		<br>
+   		<img class="clicker" src="cat_picture2.jpeg">
+   	</div>
+   	<div class="cat" id="cat3">
+		<span class="counter">0</span> clicks
+		<br>
+   		<img class="clicker" src="cat_picture3.jpeg">
+   	</div>
+   	<div class="cat" id="cat4">
+		<span class="counter">0</span> clicks
+		<br>
+   		<img class="clicker" src="cat_picture4.jpeg">
+   	</div>
+   	<div class="cat" id="cat5">
+		<span class="counter">0</span> clicks
+		<br>
+   		<img class="clicker" src="cat_picture5.jpeg">
+   	</div>
 </body>
 </html>
+<script src="js/libs/jquery.min.js"></script>
+<script src="js/app.js"></script>
