@@ -27,7 +27,7 @@ var app = app || {};
 		//Toggle Priority state of this todo item
 		togglePriority: function () {
 			this.save({
-				completed: !this.get('priority')
+				priority: !this.get('priority')
 			});
 		}
 	});
