@@ -23,6 +23,18 @@ API Course, Lesson 1 -->
 		center: {lat: 40.7413549, lng: -73.99802439999996},
 		zoom: 13
 	   });
+	   var tribeca = {lat: 40.7413549, lng: -74.0089934};
+	   var marker = new google.maps.Marker({
+		position: tribeca,
+		map: map,
+		title: 'First Marker!'
+	   });
+	   var infowindow = new google.maps.InfoWindow({
+		content: 'Do you ever feel like an InfoWindow, floating through the wind,' + ' ready to start again?'
+	   });
+	   marker.addListener('click', function() {
+		infowindow.open(map, marker);
+	   });
      }
    </script>
    <!--TODO: Load the JS API ASYNCHRONOUSLY below.-->
