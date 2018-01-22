@@ -203,7 +203,9 @@ API Course, Lesson 1 -->
 		
 		document.getElementById('show-listings').addEventListener('click', showListings);
 		document.getElementById('hide-listings').addEventListener('click', hideListings);
-		document.getElementById('toggle-drawing').addEventListener('click', toggleDrawing(drawingManager));
+		document.getElementById('toggle-drawing').addEventListener('click', function() {
+          toggleDrawing(drawingManager);
+        });
 		drawingManager.addListener('overlaycomplete', function(event){
 		  if (polygon) {
             polygon.setMap(null);
@@ -288,6 +290,8 @@ API Course, Lesson 1 -->
         }
       }
 	  function searchWithinPolygon() {
+	    var area = google.maps.geometry.spherical.computeArea(polygon.getPath());
+	    window.alert(area + " SQUARE METERS");
         for (var i = 0; i < markers.length; i++) {
           if (google.maps.geometry.poly.containsLocation(markers[i].position, polygon)) {
             markers[i].setMap(map);
