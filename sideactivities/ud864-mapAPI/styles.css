@@ -1,4 +1,4 @@
-      html,
+html,
       body {
         font-family: Arial, sans-serif;
         height: 100%;
@@ -54,8 +54,8 @@
       }
 
       #pano {
-        width: 400px;
-        height: 400px;
+        width: 200px;
+        height: 200px;
       }
 
       #places-search,
