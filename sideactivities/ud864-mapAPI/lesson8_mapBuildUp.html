@@ -4,23 +4,43 @@
    <link rel="stylesheet" href="styles.css">
  </head>
  <body>
-   <div class="container">
-	<div class="options-box">
-		<h1>Find Your New NYC Home</h1>
-		<div>
-			<input id="show-listings" type="button" value="Show Listings">
-			<input id="hide-listings" type="button" value="Hide Listings">
-			<hr>
-			<span class="text"> Draw a shape to search within it for homes!</span>
-			<input id="toggle-drawing"  type="button" value="Drawing Tools">
-		</div>
-		<hr>
+    <div class="container">
+      <div class="options-box">
+        <h1>Find Your New NYC Home</h1>
+        <div>
+          <input id="show-listings" type="button" value="Show Listings">
+          <input id="hide-listings" type="button" value="Hide Listings">
+          <hr>
+          <span class="text"> Draw a shape to search within it for homes!</span>
+          <input id="toggle-drawing"  type="button" value="Drawing Tools">
+        </div>
+        <hr>
         <div>
           <input id="zoom-to-area-text" type="text" placeholder="Enter your favorite area!">
           <input id="zoom-to-area" type="button" value="Zoom">
         </div>
-   </div>
-   <div id="map"></div>
+        <hr>
+        <div>
+          <span class="text"> Within </span>
+          <select id="max-duration">
+            <option value="10">10 min</option>
+            <option value="15">15 min</option>
+            <option value="30">30 min</option>
+            <option value="60">1 hour</option>
+          </select>
+          <select id="mode">
+            <option value="DRIVING">drive</option>
+            <option value="WALKING">walk</option>
+            <option value="BICYCLING">bike</option>
+            <option value="TRANSIT">transit ride</option>
+          </select>
+          <span class="text">of</span>
+          <input id="search-within-time-text" type="text" placeholder="Ex: Google Office NYC or 75 9th Ave, New York, NY">
+          <input id="search-within-time" type="button" value="Go">
+        </div>
+      </div>
+      <div id="map"></div>
+    </div>
    <script>
 	 var map;
 	 var markers = [];
@@ -153,6 +173,9 @@
 		document.getElementById('zoom-to-area').addEventListener('click', function() {
           zoomToArea();
         });
+		document.getElementById('search-within-time').addEventListener('click', function() {
+          searchWithinTime();
+        });
 		document.getElementById('toggle-drawing').addEventListener('click', function() {
           toggleDrawing(drawingManager);
         });
@@ -268,6 +291,65 @@
                     ' specific place.');
               }
             });
+        }
+      }
+	  function searchWithinTime() {
+        var distanceMatrixService = new google.maps.DistanceMatrixService;
+        var address = document.getElementById('search-within-time-text').value;
+        if (address == '') {
+          window.alert('You must enter an address.');
+        } else {
+          hideListings();
+          var origins = [];
+          for (var i = 0; i < markers.length; i++) {
+            origins[i] = markers[i].position;
+          }
+          var destination = address;
+          var mode = document.getElementById('mode').value;
+          distanceMatrixService.getDistanceMatrix({
+            origins: origins,
+            destinations: [destination],
+            travelMode: google.maps.TravelMode[mode],
+            unitSystem: google.maps.UnitSystem.IMPERIAL,
+          }, function(response, status) {
+            if (status !== google.maps.DistanceMatrixStatus.OK) {
+              window.alert('Error was: ' + status);
+            } else {
+              displayMarkersWithinTime(response);
+            }
+          });
+        }
+      }
+	  function displayMarkersWithinTime(response) {
+        var maxDuration = document.getElementById('max-duration').value;
+        var origins = response.originAddresses;
+        var destinations = response.destinationAddresses;
+        var atLeastOne = false;
+        for (var i = 0; i < origins.length; i++) {
+          var results = response.rows[i].elements;
+          for (var j = 0; j < results.length; j++) {
+            var element = results[j];
+            if (element.status === "OK") {
+              var distanceText = element.distance.text;
+              var duration = element.duration.value / 60;
+              var durationText = element.duration.text;
+              if (duration <= maxDuration) {
+                markers[i].setMap(map);
+                atLeastOne = true;
+                var infowindow = new google.maps.InfoWindow({
+                  content: durationText + ' away, ' + distanceText
+                });
+                infowindow.open(map, markers[i]);
+                markers[i].infowindow = infowindow;
+                google.maps.event.addListener(markers[i], 'click', function() {
+                  this.infowindow.close();
+                });
+              }
+            }
+          }
+        }
+        if (!atLeastOne) {
+          window.alert('We could not find any locations within that distance!');
         }
       }
    </script>
