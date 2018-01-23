@@ -119,6 +119,11 @@
 		styles: styles,
 		mapTypeControl: false
 	   });
+	   var timeAutocomplete = new google.maps.places.Autocomplete(
+            document.getElementById('search-within-time-text'));
+       var zoomAutocomplete = new google.maps.places.Autocomplete(
+            document.getElementById('zoom-to-area-text'));
+       zoomAutocomplete.bindTo('bounds', map);
 	   var locations = [
           {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}},
           {title: 'Chelsea Loft', location: {lat: 40.7444883, lng: -73.9949465}},
@@ -383,7 +388,7 @@
    </script>
    
    <script async defer
-	src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&key=AIzaSyA1q7Qw9MDJWszBq1Ta5-geA01e8rnyuhk&v=3&callback=initMap">
+	src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyA1q7Qw9MDJWszBq1Ta5-geA01e8rnyuhk&v=3&callback=initMap">
    </script>
  </body>
 </html>
