@@ -13,8 +13,8 @@
     <div class="options-box">
       <h1>Monterey CA</h1>
       <div>
-        <input id="show-place" type="button" value="Show Places">
-        <input id="hide-place" type="button" value="Hide Places">
+        <button id="show-place" data-bind="click: showPlaces">Show Places</button>
+        <button id="hide-place" data-bind="click: hidePlaces">Hide Places</button>
       </div>
       <hr>
       <div data-bind="submit: doSearch">
