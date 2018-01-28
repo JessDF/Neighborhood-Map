@@ -31,7 +31,8 @@
 	 			]
 	 		}
 	 	});*/
-
+		
+		// Use location array to create markers and push them to the map
 	 	for (var i = 0; i < locations.length; i++) {
 	 		var position = locations[i].location;
 	 		var title = locations[i].title;
@@ -51,8 +52,10 @@
 
 	 	map.fitBounds(bounds);
 	 }
-
+	 
+	 // Function that connects to "show places" button
 	 function showListings() {
+	 	// Clears all of the markers before showing all markers on map
 	 	hideMarkers(placeMarkers);
 	 	var bounds = new google.maps.LatLngBounds();
 	 	for (var i = 0; i < markers.length; i++) {
@@ -62,7 +65,10 @@
 	 	map.fitBounds(bounds);
 	 }
 
+	 // Function that populate the info window of clicked markers
+	 // Only one marker will be open at a time
 	 function populateInfoWindow(marker, infowindow) {
+	 	// Check to make sure the infowindow is not already opened on this marker.
 	 	if (infowindow.marker != marker) {
 	 		infowindow.marker = marker;
 	 		infowindow.setContent('<div>' + marker.title + '</div>');
@@ -73,11 +79,13 @@
 	 		var streetViewService = new google.maps.StreetViewService();
 	 		var radius = 50;
 
+	 		// If status is OK, then will compute and show street view of location
 	 		function getStreetView(data, status) {
 	 			if (status == google.maps.StreetViewStatus.OK) {
 	 				var nearStreetViewLocation = data.location.latLng;
 	 				var heading = google.maps.geometry.spherical.computeHeading(
 	 					nearStreetViewLocation, marker.position);
+	 				// Creates ID for the panorama of the street view and assigns heading and pitch
 	 				infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
 	 				var panoramaOptions = {
 	 					position: nearStreetViewLocation,
@@ -94,23 +102,28 @@
 	 					'<div>No Street View Found</div>');
 	 			}
 	 		}
+	 		// Use streetview service to get the closest streetview image
 	 		streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+	 		// Opens for the correct marker
 	 		infowindow.open(map, marker);
 	 	}
 	 }
 
+	 // Hides the markers for the "hide places" button and when filtering
 	 function hideMarkers(markers) {
 	 	for (var i = 0; i < markers.length; i++) {
 	 		markers[i].setMap(null);
 	 	}
 	 }
 
+	 //When user filters the places, gets the details for the place when marker clicked
 	 function getPlacesDetails(marker, infowindow) {
 	 	var service = new google.maps.places.PlacesService(map);
 	 	service.getDetails({
 	 		placeId: marker.id
 	 	}, function(place, status) {
 	 		if (status === google.maps.places.PlacesServiceStatus.OK) {
+	 			// Set the marker property on this infowindow so it isn't created again.
 	 			infowindow.marker = marker;
 	 			var innerHTML = '<div>';
 	 			if (place.name) {
@@ -138,6 +151,7 @@
 	 			innerHTML += '</div>';
 	 			infowindow.setContent(innerHTML);
 	 			infowindow.open(map, marker);
+	 			// Make sure the marker property is cleared if the infowindow is closed.
 	 			infowindow.addListener('closeclick', function() {
 	 				infowindow.marker = null;
 	 			});
@@ -145,6 +159,7 @@
 	 	});
 	 }
 
+	 // This function creates markers for each place found in filtering
 	 function createMarkersForPlaces(places) {
 	 	var bounds = new google.maps.LatLngBounds();
 	 	for (var i = 0; i < places.length; i++) {
