@@ -21,16 +21,6 @@
 	 	});
 	 	var largeInfowindow = new google.maps.InfoWindow();
 	 	var bounds = new google.maps.LatLngBounds();
-	 	/*var drawingManager = new google.maps.drawing.DrawingManager({
-	 		drawingMode: google.maps.drawing.OverlayType.POLYGON,
-	 		drawingControl: true,
-	 		drawingControlOptions: {
-	 			position: google.maps.ControlPosition.TOP_LEFT,
-	 			drawingModes: [
-	 				google.maps.drawing.OverlayType.POLYGON
-	 			]
-	 		}
-	 	});*/
 
 	 	// Use location array to create markers and push them to the map
 	 	for (var i = 0; i < locations.length; i++) {
@@ -160,6 +150,7 @@
 	 }
 
 	 // This function creates markers for each place found in filtering
+	 // However, does zoom into the first location on the filtering list
 	 function createMarkersForPlaces(places) {
 	 	var bounds = new google.maps.LatLngBounds();
 	 	for (var i = 0; i < places.length; i++) {
