@@ -1,3 +1,4 @@
+	 //Global variable to use throughout program
 	 var map;
 	 var markers = [];
 	 var polygon = null;
@@ -10,7 +11,9 @@
 	 	{ title: 'Cannary Row', location: { lat: 36.613293, lng: -121.897732 } }
 	 ];
 
+	 // Function to initiate map, and create a new map and markers
 	 function initMap() {
+	 	// Constructor for the new map
 	 	map = new google.maps.Map(document.getElementById('map'), {
 	 		center: { lat: 36.603954, lng: -121.898460 },
 	 		zoom: 13,
@@ -18,7 +21,7 @@
 	 	});
 	 	var largeInfowindow = new google.maps.InfoWindow();
 	 	var bounds = new google.maps.LatLngBounds();
-	 	var drawingManager = new google.maps.drawing.DrawingManager({
+	 	/*var drawingManager = new google.maps.drawing.DrawingManager({
 	 		drawingMode: google.maps.drawing.OverlayType.POLYGON,
 	 		drawingControl: true,
 	 		drawingControlOptions: {
@@ -27,7 +30,7 @@
 	 				google.maps.drawing.OverlayType.POLYGON
 	 			]
 	 		}
-	 	});
+	 	});*/
 
 	 	for (var i = 0; i < locations.length; i++) {
 	 		var position = locations[i].location;

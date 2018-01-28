@@ -23,3 +23,4 @@ Udacity Fullstack Web Development Nanodegree Program - Project 7: Neighborhood M
 
 ### Note -
 - I used some of the code given to use throughout the course
+- Within the folder "sideactivities": All the projects I did following along with the videos

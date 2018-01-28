@@ -12,15 +12,18 @@
   <div class="container">
     <div class="options-box">
       <h1>Monterey, CA</h1>
+      <!-- Form for user to filter results -->
       <form data-bind = "submit: doSearch">
     		<input id="search-box" data-bind="value: searchTerm" placeholder="Search" autocomplete="off"/>
     		<button type="submit">Submit</button>
     	</form>
     	<hr>
       <div>
+        <!-- Buttons to hide/show all the different places -->
         <button id="show-place" data-bind="click: showPlaces">Show Places</button>
         <button id="hide-place" data-bind="click: hidePlaces">Hide Places</button>
       </div>
+      <!-- List of locations, will change with filter -->
       <p>Locations:</p>
       <ul id="place-list" data-bind="foreach: locationsList">	
   			<li data-bind="text:$data"></li>
