@@ -19,6 +19,7 @@ Udacity Fullstack Web Development Nanodegree Program - Project 7: Neighborhood M
     - "Locations": Shows all the places you can search for, are in our "Show Places"
     - "Search Bar": Type in a location, or part of a location from list and will zoom in.
         - Will also show a special marker
+        - Will zoom into the first loaction on list, but when user zooms out will see all locations in filtering
         - You can click on the location and it will list hours of location, address, and an image
 
 ### Note -
