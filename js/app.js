@@ -219,7 +219,7 @@
 	 		}
 	 		// Calls above function to show all places and markers
 	 		showListings();
-	 	}
+	 	};
 	 	
 	 	//When "Hide Places" button clicked this function called
 	 	this.hidePlaces = function() {
@@ -235,13 +235,13 @@
 	 		hideMarkers(placeMarkers);
 	 		// Calls function to hide all normal markers
 	 		hideMarkers(markers);
-	 	}
+	 	};
 	 	
 	 	// After user presses submit for filtering, calls this
 	 	this.doSearch = function() {
 	 		// Grabs user input and test that it's not empty
 	 		var search = this.searchTerm();
-	 		if (search == "") {
+	 		if (search === "") {
 	 			window.alert('You must enter an area, or address.');
 	 			return;
 	 		}
@@ -275,8 +275,8 @@
 	 				}
 	 			}
 	 		}
-	 	}
-	 }
+	 	};
+	 };
 
 	 // Once website is ran, will run this function
 	 function startApp() {
