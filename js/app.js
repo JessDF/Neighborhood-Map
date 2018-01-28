@@ -31,8 +31,8 @@
 	 			]
 	 		}
 	 	});*/
-		
-		// Use location array to create markers and push them to the map
+
+	 	// Use location array to create markers and push them to the map
 	 	for (var i = 0; i < locations.length; i++) {
 	 		var position = locations[i].location;
 	 		var title = locations[i].title;
@@ -52,7 +52,7 @@
 
 	 	map.fitBounds(bounds);
 	 }
-	 
+
 	 // Function that connects to "show places" button
 	 function showListings() {
 	 	// Clears all of the markers before showing all markers on map
@@ -171,6 +171,7 @@
 	 			anchor: new google.maps.Point(15, 34),
 	 			scaledSize: new google.maps.Size(25, 25)
 	 		};
+	 		// Create a marker for each place.
 	 		var marker = new google.maps.Marker({
 	 			map: map,
 	 			icon: icon,
@@ -178,7 +179,10 @@
 	 			position: place.geometry.location,
 	 			id: place.place_id
 	 		});
+	 		// Create a single infowindow to be used with the place details information
+	 		// so that only one is open at once.
 	 		var placeInfoWindow = new google.maps.InfoWindow();
+	 		// If a marker is clicked, do a place details search on it in the next function.
 	 		marker.addListener('click', function() {
 	 			if (placeInfoWindow.marker == this) {
 	 				console.log("This infowindow already is on this marker!");
@@ -189,6 +193,7 @@
 	 		});
 	 		placeMarkers.push(marker);
 	 		if (place.geometry.viewport) {
+	 			// Only geocodes have viewport.
 	 			bounds.union(place.geometry.viewport);
 	 		}
 	 		else {
@@ -198,58 +203,81 @@
 	 	map.fitBounds(bounds);
 	 }
 
+	 // This is the viewModel and controls the functionality of program
 	 var ViewModel = function() {
+	 	// Variables for controlling the filtering and list
 	 	this.searchTerm = ko.observable("");
-	 	initMap();
 	 	this.locationsList = ko.observableArray([]);
+	 	// Will call the function to initate the map
+	 	initMap();
 
+	 	// Loads all of the locations into the list
 	 	for (var i = 0; i < locations.length; i++) {
 	 		var title = locations[i].title;
 	 		this.locationsList.push(title);
 	 	}
+	 	
+	 	//When "Show Places" button clicked this function called
 	 	this.showPlaces = function() {
+	 		// Clears and resets list
 	 		this.locationsList.removeAll();
 
 	 		for (var i = 0; i < locations.length; i++) {
 	 			var title = locations[i].title;
 	 			this.locationsList.push(title);
 	 		}
+	 		// Calls above function to show all places and markers
 	 		showListings();
 	 	}
+	 	
+	 	//When "Hide Places" button clicked this function called
 	 	this.hidePlaces = function() {
-	 	  this.locationsList.removeAll();
+	 		// Clears and resets list
+	 		this.locationsList.removeAll();
 
 	 		for (var i = 0; i < locations.length; i++) {
 	 			var title = locations[i].title;
 	 			this.locationsList.push(title);
 	 		}
-	 	  hideMarkers(placeMarkers);
+	 		
+	 		// Calls function to hide special markers from filtering
+	 		hideMarkers(placeMarkers);
+	 		// Calls function to hide all normal markers
 	 		hideMarkers(markers);
 	 	}
+	 	
+	 	// After user presses submit for filtering, calls this
 	 	this.doSearch = function() {
+	 		// Grabs user input and test that it's not empty
 	 		var search = this.searchTerm();
 	 		if (search == "") {
 	 			window.alert('You must enter an area, or address.');
 	 			return;
 	 		}
 	 		else {
+	 			// Clears out locations list and updates with places that match users input
 	 			this.locationsList.removeAll();
 	 			for (var i in markers) {
 	 				markers[i].setMap(null);
 	 			}
 
+	 			// For locations that match the users filtering
 	 			for (var x in locations) {
 	 				var title = locations[x].title;
 	 				if (locations[x].title.toLowerCase().indexOf(search.toLowerCase()) >= 0) {
+	 					// Adds to the list
 	 					this.locationsList.push(title);
 	 					var bounds = map.getBounds();
+	 					// Hides all markers
 	 					hideMarkers(placeMarkers);
+	 					// Searches for each of the matching locations
 	 					var placesService = new google.maps.places.PlacesService(map);
 	 					placesService.textSearch({
 	 						query: title,
 	 						bounds: bounds
 	 					}, function(results, status) {
 	 						if (status === google.maps.places.PlacesServiceStatus.OK) {
+	 							// If status OK, then creates special marker
 	 							createMarkersForPlaces(results);
 	 						}
 	 					});
@@ -259,6 +287,8 @@
 	 	}
 	 }
 
+	 // Once website is ran, will run this function
 	 function startApp() {
+	 	// Creates new instance of the ViewModel
 	 	ko.applyBindings(new ViewModel());
 	 }
