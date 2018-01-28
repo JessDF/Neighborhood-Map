@@ -25,3 +25,4 @@ Udacity Fullstack Web Development Nanodegree Program - Project 7: Neighborhood M
 ### Note -
 - I used some of the code given to use throughout the course
 - Within the folder "sideactivities": All the projects I did following along with the videos
+- Was having trouble adding data to my list, looked at https://github.com/eheslouis/neighborhood and https://github.com/tralpha/neighborhood for ideas on how they did it. Did similar HTML styling of the two for list output.
