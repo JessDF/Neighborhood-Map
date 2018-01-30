@@ -11,6 +11,12 @@
 	 	{ title: 'Cannary Row', location: { lat: 36.613293, lng: -121.897732 } }
 	 ];
 
+	 // Function to create listner on makers for info windows
+	 function funAddListner(marker, largeInfowindow) {
+	 	marker.addListener('click', function() {
+	 		populateInfoWindow(this, largeInfowindow);
+	 	});
+	 }
 	 // Function to initiate map, and create a new map and markers
 	 function initMap() {
 	 	// Constructor for the new map
@@ -34,9 +40,10 @@
 	 		});
 
 	 		markers.push(marker);
-	 		marker.addListener('click', function() {
+	 		/*marker.addListener('click', function() {
 	 			populateInfoWindow(this, largeInfowindow);
-	 		});
+	 		});*/
+	 		funAddListner(marker, largeInfowindow);
 	 		bounds.extend(markers[i].position);
 	 	}
 
@@ -207,7 +214,7 @@
 	 		var title = locations[i].title;
 	 		this.locationsList.push(title);
 	 	}
-	 	
+
 	 	//When "Show Places" button clicked this function called
 	 	this.showPlaces = function() {
 	 		// Clears and resets list
@@ -220,7 +227,7 @@
 	 		// Calls above function to show all places and markers
 	 		showListings();
 	 	};
-	 	
+
 	 	//When "Hide Places" button clicked this function called
 	 	this.hidePlaces = function() {
 	 		// Clears and resets list
@@ -230,13 +237,13 @@
 	 			var title = locations[i].title;
 	 			this.locationsList.push(title);
 	 		}
-	 		
+
 	 		// Calls function to hide special markers from filtering
 	 		hideMarkers(placeMarkers);
 	 		// Calls function to hide all normal markers
 	 		hideMarkers(markers);
 	 	};
-	 	
+
 	 	// After user presses submit for filtering, calls this
 	 	this.doSearch = function() {
 	 		// Grabs user input and test that it's not empty
