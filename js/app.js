@@ -11,8 +11,8 @@
 	 	{ title: 'Cannary Row', location: { lat: 36.613293, lng: -121.897732 } }
 	 ];
 
-	 // Function to create listner on makers for info windows
-	 function funAddListner(marker, largeInfowindow) {
+	 // Function to create listner on makers for info windows within the initMap Function
+	 function funInitAddListner(marker, largeInfowindow) {
 	 	marker.addListener('click', function() {
 	 		populateInfoWindow(this, largeInfowindow);
 	 	});
@@ -43,7 +43,7 @@
 	 		/*marker.addListener('click', function() {
 	 			populateInfoWindow(this, largeInfowindow);
 	 		});*/
-	 		funAddListner(marker, largeInfowindow);
+	 		funInitAddListner(marker, largeInfowindow);
 	 		bounds.extend(markers[i].position);
 	 	}
 
@@ -155,7 +155,17 @@
 	 		}
 	 	});
 	 }
-
+	 // Function to add the event lisnters for the createMakersForPlaces function
+	 function createMarkersListner(marker, placeInfoWindow) {
+	 	marker.addListener('click', function() {
+	 		if (placeInfoWindow.marker == this) {
+	 			console.log("This infowindow already is on this marker!");
+	 		}
+	 		else {
+	 			getPlacesDetails(this, placeInfoWindow);
+	 		}
+	 	});
+	 }
 	 // This function creates markers for each place found in filtering
 	 // However, does zoom into the first location on the filtering list
 	 function createMarkersForPlaces(places) {
@@ -181,14 +191,7 @@
 	 		// so that only one is open at once.
 	 		var placeInfoWindow = new google.maps.InfoWindow();
 	 		// If a marker is clicked, do a place details search on it in the next function.
-	 		marker.addListener('click', function() {
-	 			if (placeInfoWindow.marker == this) {
-	 				console.log("This infowindow already is on this marker!");
-	 			}
-	 			else {
-	 				getPlacesDetails(this, placeInfoWindow);
-	 			}
-	 		});
+	 		createMarkersListner(marker, placeInfoWindow);
 	 		placeMarkers.push(marker);
 	 		if (place.geometry.viewport) {
 	 			// Only geocodes have viewport.
@@ -201,6 +204,18 @@
 	 	map.fitBounds(bounds);
 	 }
 
+	 // Function to add special markers when users filter the list of places
+	 function placeServiceListner(placesService, title, bounds) {
+	 	placesService.textSearch({
+	 		query: title,
+	 		bounds: bounds
+	 	}, function(results, status) {
+	 		if (status === google.maps.places.PlacesServiceStatus.OK) {
+	 			// If status OK, then creates special marker
+	 			createMarkersForPlaces(results);
+	 		}
+	 	});
+	 }
 	 // This is the viewModel and controls the functionality of program
 	 var ViewModel = function() {
 	 	// Variables for controlling the filtering and list
@@ -270,15 +285,7 @@
 	 					hideMarkers(placeMarkers);
 	 					// Searches for each of the matching locations
 	 					var placesService = new google.maps.places.PlacesService(map);
-	 					placesService.textSearch({
-	 						query: title,
-	 						bounds: bounds
-	 					}, function(results, status) {
-	 						if (status === google.maps.places.PlacesServiceStatus.OK) {
-	 							// If status OK, then creates special marker
-	 							createMarkersForPlaces(results);
-	 						}
-	 					});
+	 					placeServiceListner(placesService, title, bounds);
 	 				}
 	 			}
 	 		}
