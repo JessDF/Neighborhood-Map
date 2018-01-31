@@ -10,7 +10,14 @@ Udacity Fullstack Web Development Nanodegree Program - Project 7: Neighborhood M
 - You will then research and implement third-party APIs that provide additional information about each of these locations 
     - Such as StreetView images, Wikipedia articles, Yelp reviews, etc.
 
-### How to
+### Running Locally
+- Download or clone from https://github.com/JessDF/Neighborhood-Map
+- Once you do so, you will want to run the index.html file
+    - You can do this by double-clicking the file. 
+    - The path in the browser should be something like: <br> 
+        <a style="padding: 20px;" href="file:///C:/Users/Jessie/Desktop/Neighborhood-Map/index.html">file:///C:/Users/Jessie/Desktop/Neighborhood-Map/index.html</a>
+
+### How to Use
 - When you first view the site, it will show an empty map on the left
 - On the right, there are a few features you may test out:
     - "Show Places": Will show all 5 locations on the map
