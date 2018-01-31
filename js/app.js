@@ -245,18 +245,6 @@ function createMarkersForPlaces(places) {
   map.fitBounds(bounds);
 }
 
-// Function to add special markers when users filter the list of places
-function placeServiceListner(placesService, title, bounds) {
-  placesService.textSearch({
-    query: title,
-    bounds: bounds
-  }, function(results, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      // If status OK, then creates special marker
-      createMarkersForPlaces(results);
-    }
-  });
-}
 // This is the viewModel and controls the functionality of program
 var ViewModel = function() {
   // Variables for controlling the filtering and list
@@ -299,8 +287,28 @@ var ViewModel = function() {
     // Calls function to hide all normal markers
     hideMarkers(markers);
   };
+  var self = this;
+  //When "<location name>" button clicked or filtering entered this function called
+  this.showLocation = function() {
+    // Clears out locations list and updates with places that match users input
+    self.locationsList.removeAll();
+    var search = this;
+    for (var i in markers) {
+      markers[i].setMap(null);
+    }
 
-  // After user presses submit for filtering, calls this
+    // For locations that match the users filtering
+    for (var x in locations) {
+      var title = locations[x].title;
+      if (locations[x].title.toLowerCase().indexOf(search.toLowerCase()) >= 0) {
+        // Adds to the list
+        self.locationsList.push(title);
+
+      //TODO: SEARCH FOR LOCATION ON OUR MAP AND USE WIKI
+      //MAYBE USE:createMarkersForPlaces FUNCTION
+      }
+    }
+  };
   this.doSearch = function() {
     // Grabs user input and test that it's not empty
     var search = this.searchTerm();
@@ -308,29 +316,11 @@ var ViewModel = function() {
       window.alert('You must enter an area, or address.');
       return;
     } else {
-      // Clears out locations list and updates with places that match users input
-      this.locationsList.removeAll();
-      for (var i in markers) {
-        markers[i].setMap(null);
-      }
-
-      // For locations that match the users filtering
-      for (var x in locations) {
-        var title = locations[x].title;
-        if (locations[x].title.toLowerCase().indexOf(search.toLowerCase()) >= 0) {
-          // Adds to the list
-          this.locationsList.push(title);
-          var bounds = map.getBounds();
-          // Hides all markers
-          hideMarkers(placeMarkers);
-          // Searches for each of the matching locations
-          var placesService = new google.maps.places.PlacesService(map);
-          placeServiceListner(placesService, title, bounds);
-        }
-      }
+      //TODO: FILTER SEARCH LIST??
+      //TODO: SEARCH FOR LOCATION ON OUR MAP AND USE WIKI
     }
   };
-};
+}
 
 // Once website is ran, will run this function
 function startApp() {
