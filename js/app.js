@@ -61,7 +61,22 @@
 	 	}
 	 	map.fitBounds(bounds);
 	 }
+	 var panorama;
 
+	 function getStreetView(infowindow, marker) {
+	 	//Adds title in info window
+	 	infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+	 	var panoramaOptions = {
+	 		position: marker.position,
+	 		pov: {
+	 			heading: 100,
+	 			pitch: 15
+	 		}
+	 	};
+	 	//Creates the streetview panorama using the above options
+	 	panorama = new google.maps.StreetViewPanorama(
+	 		document.getElementById('pano'), panoramaOptions);
+	 }
 	 // Function that populate the info window of clicked markers
 	 // Only one marker will be open at a time
 	 function populateInfoWindow(marker, infowindow) {
@@ -73,34 +88,9 @@
 	 		infowindow.addListener('closeclick', function() {
 	 			infowindow.setMarker = null;
 	 		});
-	 		var streetViewService = new google.maps.StreetViewService();
-	 		var radius = 50;
 
-	 		// If status is OK, then will compute and show street view of location
-	 		function getStreetView(data, status) {
-	 			if (status == google.maps.StreetViewStatus.OK) {
-	 				var nearStreetViewLocation = data.location.latLng;
-	 				var heading = google.maps.geometry.spherical.computeHeading(
-	 					nearStreetViewLocation, marker.position);
-	 				// Creates ID for the panorama of the street view and assigns heading and pitch
-	 				infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
-	 				var panoramaOptions = {
-	 					position: nearStreetViewLocation,
-	 					pov: {
-	 						heading: heading,
-	 						pitch: 15
-	 					}
-	 				};
-	 				var panorama = new google.maps.StreetViewPanorama(
-	 					document.getElementById('pano'), panoramaOptions);
-	 			}
-	 			else {
-	 				infowindow.setContent('<div>' + marker.title + '</div>' +
-	 					'<div>No Street View Found</div>');
-	 			}
-	 		}
-	 		// Use streetview service to get the closest streetview image
-	 		streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+	 		//Gets the street view and sets panorama
+	 		getStreetView(infowindow, marker);
 	 		// Opens for the correct marker
 	 		infowindow.open(map, marker);
 	 	}
