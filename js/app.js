@@ -40,11 +40,30 @@ var locations = [
     }
   }
 ];
-
+// Function that will manage the markers colors and styling on the map
+function makeMarkerIcon(markerColor) {
+  var markerImage = new google.maps.MarkerImage(
+    'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
+    '|40|_|%E2%80%A2',
+    new google.maps.Size(21, 34),
+    new google.maps.Point(0, 0),
+    new google.maps.Point(10, 34),
+    new google.maps.Size(21, 34));
+  return markerImage;
+}
 // Function to create listner on makers for info windows within the initMap Function
 function funInitAddListner(marker, largeInfowindow) {
   marker.addListener('click', function() {
     populateInfoWindow(this, largeInfowindow);
+  });
+  //Create the colors and listners for marker animation
+  var defaultIcon = makeMarkerIcon('0091ff');
+  var highlightedIcon = makeMarkerIcon('FFFF24');
+  marker.addListener('mouseover', function() {
+    this.setIcon(highlightedIcon);
+  });
+  marker.addListener('mouseout', function() {
+    this.setIcon(defaultIcon);
   });
 }
 // Function to initiate map, and create a new map and markers
@@ -73,13 +92,10 @@ function initMap() {
     });
 
     markers.push(marker);
-    /*marker.addListener('click', function() {
-    	populateInfoWindow(this, largeInfowindow);
-    });*/
     funInitAddListner(marker, largeInfowindow);
     bounds.extend(markers[i].position);
   }
-
+  showListings();
   map.fitBounds(bounds);
 }
 
@@ -246,7 +262,7 @@ var ViewModel = function() {
   // Variables for controlling the filtering and list
   this.searchTerm = ko.observable("");
   this.locationsList = ko.observableArray([]);
-  // Will call the function to initate the map
+  // Will call the function to initate the map and show all markers
   initMap();
 
   // Loads all of the locations into the list
