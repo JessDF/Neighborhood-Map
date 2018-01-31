@@ -6,7 +6,7 @@
 	 var locations = [
 	 	{ title: 'Monterey Bay Aquarium', location: { lat: 36.618253, lng: -121.901481 } },
 	 	{ title: 'Point Lobos', location: { lat: 36.5216283, lng: -121.9527333 } },
-	 	{ title: 'CSU Monterey Bay', location: { lat: 36.650945, lng: -121.790773 } },
+	 	{ title: 'CSU Monterey Bay', location: { lat: 36.6547159, lng: -121.7968211 } },
 	 	{ title: 'Fisherman\'s Wharf', location: { lat: 36.6047, lng: -121.8925 } },
 	 	{ title: 'Cannary Row', location: { lat: 36.613293, lng: -121.897732 } }
 	 ];
@@ -61,8 +61,9 @@
 	 	}
 	 	map.fitBounds(bounds);
 	 }
-	 var panorama;
-
+	 
+	 // Function sets panorama for streetview when marker clicked
+	 //var panorama;
 	 function getStreetView(infowindow, marker) {
 	 	//Adds title in info window
 	 	infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
@@ -74,7 +75,7 @@
 	 		}
 	 	};
 	 	//Creates the streetview panorama using the above options
-	 	panorama = new google.maps.StreetViewPanorama(
+	 	var panorama = new google.maps.StreetViewPanorama(
 	 		document.getElementById('pano'), panoramaOptions);
 	 }
 	 // Function that populate the info window of clicked markers
