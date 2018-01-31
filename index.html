@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Neighborhood Map</title>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
   <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -35,7 +36,7 @@
   <!-- JavaScript Links -->
   <script src="js/lib/knockout-3.2.0.js"></script>
   <script src="js/app.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyA1q7Qw9MDJWszBq1Ta5-geA01e8rnyuhk&v=3&callback=startApp"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyA1q7Qw9MDJWszBq1Ta5-geA01e8rnyuhk&v=3&callback=startApp" onerror="googleError()"></script>
 </body>
 
-</html>
+</html
