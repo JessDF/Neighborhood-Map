@@ -174,7 +174,6 @@ function getWiki(infowindow, marker) {
         var url = 'http://en.wikipedia.org/wiki/' + articleStr;
         infowindow.setContent(infowindow.getContent() + '<li><a href="' + url + '">' + articleStr + '</a></li>');
       }
-      ;
 
       clearTimeout(wikiRequestTimeout);
     }
@@ -326,7 +325,7 @@ var ViewModel = function() {
       }
     }
   };
-}
+};
 
 // Once website is ran, will run this function
 function startApp() {
