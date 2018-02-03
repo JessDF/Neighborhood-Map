@@ -153,50 +153,50 @@ function hideMarkers(markers) {
   }
 }
 
-//When user filters the places, gets the details for the place when marker clicked
-function getPlacesDetails(marker, infowindow) {
-  var service = new google.maps.places.PlacesService(map);
-  service.getDetails({
-    placeId: marker.id
-  }, function(place, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      // Set the marker property on this infowindow so it isn't created again.
-      infowindow.marker = marker;
-      var innerHTML = '<div>';
-      if (place.name) {
-        innerHTML += '<strong>' + place.name + '</strong>';
+//Get wiki articles
+function getWiki(infowindow, marker) {
+  //Adds title in info window
+  infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+  // Wikipedia AJAX request (Cross-site Request - JSONP )
+  var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
+  //If request times out, says "failed to load resources"
+  var wikiRequestTimeout = setTimeout(function() {
+    infowindow.setContent(infowindow.getContent() + "<br> Failed to get Wikipedia resources");
+  }, 8000);
+  $.ajax({
+    url: wikiUrl,
+    dataType: "jsonp",
+    //jsonp: "callback",
+    success: function(response) {
+      var articleList = response[1];
+      for (var i = 0; i < articleList.length; i++) {
+        var articleStr = articleList[i];
+        var url = 'http://en.wikipedia.org/wiki/' + articleStr;
+        infowindow.setContent(infowindow.getContent() + '<li><a href="' + url + '">' + articleStr + '</a></li>');
       }
-      if (place.formatted_address) {
-        innerHTML += '<br>' + place.formatted_address;
-      }
-      if (place.formatted_phone_number) {
-        innerHTML += '<br>' + place.formatted_phone_number;
-      }
-      if (place.opening_hours) {
-        innerHTML += '<br><br><strong>Hours:</strong><br>' +
-        place.opening_hours.weekday_text[0] + '<br>' +
-        place.opening_hours.weekday_text[1] + '<br>' +
-        place.opening_hours.weekday_text[2] + '<br>' +
-        place.opening_hours.weekday_text[3] + '<br>' +
-        place.opening_hours.weekday_text[4] + '<br>' +
-        place.opening_hours.weekday_text[5] + '<br>' +
-        place.opening_hours.weekday_text[6];
-      }
-      if (place.photos) {
-        innerHTML += '<br><br><img src="' + place.photos[0].getUrl({
-            maxHeight: 100,
-            maxWidth: 200
-          }) + '">';
-      }
-      innerHTML += '</div>';
-      infowindow.setContent(innerHTML);
-      infowindow.open(map, marker);
-      // Make sure the marker property is cleared if the infowindow is closed.
-      infowindow.addListener('closeclick', function() {
-        infowindow.marker = null;
-      });
+      ;
+
+      clearTimeout(wikiRequestTimeout);
     }
   });
+}
+
+//When user filters the places, gets the wiki pages for the place when marker clicked
+function getPlacesDetails(marker, infowindow) {
+  // Check to make sure the infowindow is not already opened on this marker.
+  if (infowindow.marker != marker) {
+    infowindow.marker = marker;
+    infowindow.setContent('<div>' + marker.title + '</div>');
+    infowindow.open(map, marker);
+    infowindow.addListener('closeclick', function() {
+      infowindow.setMarker = null;
+    });
+
+    //Gets the street view and sets panorama
+    getWiki(infowindow, marker);
+    // Opens for the correct marker
+    infowindow.open(map, marker);
+  }
 }
 // Function to add the event lisnters for the createMakersForPlaces function
 function createMarkersListner(marker, placeInfoWindow) {
@@ -208,47 +208,24 @@ function createMarkersListner(marker, placeInfoWindow) {
     }
   });
 }
-// This function creates markers for each place found in filtering
-// However, does zoom into the first location on the filtering list
-function createMarkersForPlaces(places) {
-  var bounds = new google.maps.LatLngBounds();
-  for (var i = 0; i < places.length; i++) {
-    var place = places[i];
-    var icon = {
-      url: place.icon,
-      size: new google.maps.Size(35, 35),
-      origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(15, 34),
-      scaledSize: new google.maps.Size(25, 25)
-    };
-    // Create a marker for each place.
-    var marker = new google.maps.Marker({
-      map: map,
-      icon: icon,
-      title: place.name,
-      position: place.geometry.location,
-      id: place.place_id
-    });
-    // Create a single infowindow to be used with the place details information
-    // so that only one is open at once.
-    var placeInfoWindow = new google.maps.InfoWindow();
-    // If a marker is clicked, do a place details search on it in the next function.
-    createMarkersListner(marker, placeInfoWindow);
-    placeMarkers.push(marker);
-    if (place.geometry.viewport) {
-      // Only geocodes have viewport.
-      bounds.union(place.geometry.viewport);
-    } else {
-      bounds.extend(place.geometry.location);
-    }
-  }
-  map.fitBounds(bounds);
-}
 
-function filterSearch(place) {
-  //TODO: SEARCH FOR LOCATION ON OUR MAP AND USE WIKI
-  //MAYBE USE:createMarkersForPlaces FUNCTION
-  createMarkersForPlaces(place);
+//Create marker for filtering and calls function to init window and wiki
+function filterSearch(place, i) {
+  var largeInfowindow = new google.maps.InfoWindow();
+  var bounds = new google.maps.LatLngBounds();
+  //Create new marker
+  var marker = new google.maps.Marker({
+    map: map,
+    position: place.location,
+    title: place.title,
+    animation: google.maps.Animation.DROP,
+    id: i
+  });
+
+  //Call listner and add markers to map
+  createMarkersListner(marker, largeInfowindow);
+  bounds.extend(place.location);
+  map.fitBounds(bounds);
 }
 
 // This is the viewModel and controls the functionality of program
@@ -302,6 +279,10 @@ var ViewModel = function() {
     for (var i in markers) {
       markers[i].setMap(null);
     }
+    // Calls function to hide special markers from filtering
+    hideMarkers(placeMarkers);
+    // Calls function to hide all normal markers
+    hideMarkers(markers);
 
     // For locations that match the users filtering
     for (var x in locations) {
@@ -311,7 +292,7 @@ var ViewModel = function() {
         self.locationsList.push(title);
 
         //Add markers to places
-        filterSearch(locations[x]);
+        filterSearch(locations[x], x);
       }
     }
   };
@@ -324,6 +305,10 @@ var ViewModel = function() {
     } else {
       // Clears out locations list and updates with places that match users input
       self.locationsList.removeAll();
+      // Calls function to hide special markers from filtering
+      hideMarkers(placeMarkers);
+      // Calls function to hide all normal markers
+      hideMarkers(markers);
       for (var i in markers) {
         markers[i].setMap(null);
       }
@@ -336,7 +321,7 @@ var ViewModel = function() {
           self.locationsList.push(title);
 
           // Add markers to places
-          filterSearch(locations[x]);
+          filterSearch(locations[x], x);
         }
       }
     }
