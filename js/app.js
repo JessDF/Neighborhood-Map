@@ -245,6 +245,12 @@ function createMarkersForPlaces(places) {
   map.fitBounds(bounds);
 }
 
+function filterSearch(place) {
+  //TODO: SEARCH FOR LOCATION ON OUR MAP AND USE WIKI
+  //MAYBE USE:createMarkersForPlaces FUNCTION
+  createMarkersForPlaces(place);
+}
+
 // This is the viewModel and controls the functionality of program
 var ViewModel = function() {
   // Variables for controlling the filtering and list
@@ -304,8 +310,8 @@ var ViewModel = function() {
         // Adds to the list
         self.locationsList.push(title);
 
-      //TODO: SEARCH FOR LOCATION ON OUR MAP AND USE WIKI
-      //MAYBE USE:createMarkersForPlaces FUNCTION
+        //Add markers to places
+        filterSearch(locations[x]);
       }
     }
   };
@@ -316,8 +322,23 @@ var ViewModel = function() {
       window.alert('You must enter an area, or address.');
       return;
     } else {
-      //TODO: FILTER SEARCH LIST??
-      //TODO: SEARCH FOR LOCATION ON OUR MAP AND USE WIKI
+      // Clears out locations list and updates with places that match users input
+      self.locationsList.removeAll();
+      for (var i in markers) {
+        markers[i].setMap(null);
+      }
+
+      // For locations that match the users filtering
+      for (var x in locations) {
+        var title = locations[x].title;
+        if (locations[x].title.toLowerCase().indexOf(search.toLowerCase()) >= 0) {
+          // Adds to the list
+          self.locationsList.push(title);
+
+          // Add markers to places
+          filterSearch(locations[x]);
+        }
+      }
     }
   };
 }

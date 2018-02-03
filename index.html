@@ -14,10 +14,7 @@
     <div class="options-box">
       <h1>Monterey, CA</h1>
       <!-- Form for user to filter results -->
-      <form data-bind="submit: doSearch">
-        <input id="search-box" data-bind="value: searchTerm" placeholder="Search" autocomplete="off" />
-        <button type="submit">Submit</button>
-      </form>
+      <input id="search-box" data-bind="value: searchTerm, valueUpdate: ['keyup'], event: { keyup: doSearch }" placeholder="search - press enter" autocomplete="off" />
       <hr>
       <div>
         <!-- Buttons to hide/show all the different places -->
