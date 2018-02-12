@@ -213,7 +213,7 @@ function createMarkersListner(marker, placeInfoWindow) {
 }
 
 //Create marker for filtering and calls function to init window and wiki
-function filterSearch(place, i) {
+function filterSearch(place) {
   var largeInfowindow = new google.maps.InfoWindow();
   var bounds = new google.maps.LatLngBounds();
   var flag = false;
@@ -315,7 +315,7 @@ var ViewModel = function() {
         self.locationsList.push(title);
 
         //Add markers to places
-        filterSearch(locations[x], x);
+        filterSearch(locations[x]);
       }
     }
   };
@@ -341,7 +341,7 @@ var ViewModel = function() {
           self.locationsList.push(title);
 
           // Add markers to places
-          filterSearch(locations[x], x);
+          filterSearch(locations[x]);
         }
       }
     }
