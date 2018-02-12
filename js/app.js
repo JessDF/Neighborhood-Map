@@ -186,6 +186,7 @@ function getWiki(infowindow, marker) {
 //When user filters the places, gets the wiki pages for the place when marker clicked
 function getPlacesDetails(marker, infowindow) {
   // Check to make sure the infowindow is not already opened on this marker.
+  // Check to make sure the infowindow is not already opened on this marker.
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
     infowindow.setContent('<div>' + marker.title + '</div>');
@@ -194,7 +195,7 @@ function getPlacesDetails(marker, infowindow) {
       infowindow.setMarker = null;
     });
 
-    //Gets the street view and sets panorama
+    //Gets the wikipedia articles
     getWiki(infowindow, marker);
     // Opens for the correct marker
     infowindow.open(map, marker);
@@ -203,10 +204,10 @@ function getPlacesDetails(marker, infowindow) {
 // Function to add the event lisnters for the createMakersForPlaces function
 function createMarkersListner(marker, placeInfoWindow) {
   marker.addListener('click', function() {
-    if (placeInfoWindow.marker == this) {
+    if (placeInfoWindow.marker == marker) {
       console.log("This infowindow already is on this marker!");
     } else {
-      getPlacesDetails(this, placeInfoWindow);
+      getPlacesDetails(marker, placeInfoWindow);
     }
   });
 }
@@ -215,19 +216,23 @@ function createMarkersListner(marker, placeInfoWindow) {
 function filterSearch(place, i) {
   var largeInfowindow = new google.maps.InfoWindow();
   var bounds = new google.maps.LatLngBounds();
-  //Create new marker
-  var marker = new google.maps.Marker({
-    map: map,
-    position: place.location,
-    title: place.title,
-    animation: google.maps.Animation.DROP,
-    id: i
-  });
-
-  //Call listner and add markers to map
-  createMarkersListner(marker, largeInfowindow);
-  bounds.extend(place.location);
-  map.fitBounds(bounds);
+  var flag = false;
+  for (var i = 0; i < markers.length; i++) {
+    //Filter for place
+    if (markers[i].title == place.title) {
+      var marker = markers[i];
+      flag = true;
+      //Call listner and add markers to map
+      createMarkersListner(marker, largeInfowindow);
+      marker.setMap(map);
+      bounds.extend(place.location);
+      map.fitBounds(bounds);
+    }
+  }
+  // If place not found, alert user
+  if (!flag) {
+    window.alert("Place not found");
+  }
 }
 
 // This is the viewModel and controls the functionality of program
@@ -327,9 +332,6 @@ var ViewModel = function() {
       hideMarkers(placeMarkers);
       // Calls function to hide all normal markers
       hideMarkers(markers);
-      for (var i in markers) {
-        markers[i].setMap(null);
-      }
 
       // For locations that match the users filtering
       for (var x in locations) {
