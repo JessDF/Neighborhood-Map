@@ -20,14 +20,16 @@ Udacity Fullstack Web Development Nanodegree Program - Project 7: Neighborhood M
 ### How to Use
 - When you first view the site, it will show an empty map on the left
 - On the right, there are a few features you may test out:
+    - "Options": When clicked, will hide/show the options box/features 
     - "Show Places": Will show all 5 locations on the map
         - You can click on the location and it will show street view and location name
     - "Hide Places": Will hide all markers on the map
-    - "Locations": Shows all the places you can search for, are in our "Show Places"
+    - "Locations": Shows all the places you can search for, are in our "Show Places
+        - You can click on the different buttons, will zoom into location
+        - Click on location and see wikipedia articles on the location
     - "Search Bar": Type in a location, or part of a location from list and will zoom in.
-        - Will also show a special marker
-        - Will zoom into the first loaction on list, but when user zooms out will see all locations in filtering
-        - You can click on the location and it will list hours of location, address, and an image
+        - Will zoom into the first location on list
+        - Click on location and see wikipedia articles on the location
 
 ### Note -
 - I used some of the code given to use throughout the course
