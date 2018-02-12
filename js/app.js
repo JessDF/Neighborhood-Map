@@ -56,7 +56,7 @@ function funInitAddListner(marker, largeInfowindow) {
   marker.addListener('click', function() {
     populateInfoWindow(this, largeInfowindow);
   });
-  //Create the colors and listners for marker animation
+  //Create the listners and colors for marker animation
   var defaultIcon = makeMarkerIcon('0091ff');
   var highlightedIcon = makeMarkerIcon('FFFF24');
   marker.addListener('mouseover', function() {
@@ -81,6 +81,7 @@ function initMap() {
   var bounds = new google.maps.LatLngBounds();
 
   // Use location array to create markers and push them to the map
+  var defaultIcon = makeMarkerIcon('0091ff');
   for (var i = 0; i < locations.length; i++) {
     var position = locations[i].location;
     var title = locations[i].title;
@@ -88,6 +89,7 @@ function initMap() {
       position: position,
       title: title,
       animation: google.maps.Animation.DROP,
+      icon: defaultIcon,
       id: i
     });
 
@@ -244,17 +246,17 @@ var ViewModel = function() {
 
   //When clicked: Show side menu
   this.showOptions = function() {
-    var x = document.getElementById("optionsBox");
-    var y = document.getElementById("containerBox");
-    var z = document.getElementById("map");
-    if (x.style.display === "none") {
-      x.style.display = "block";
-      y.style.display = "block";
-      z.style.left = "362px";
+    var options = document.getElementById("optionsBox");
+    var container = document.getElementById("containerBox");
+    var maps = document.getElementById("map");
+    if (options.style.display === "none") {
+      options.style.display = "block";
+      container.style.display = "block";
+      maps.style.left = "362px";
     } else {
-      x.style.display = "none";
-      y.style.display = "none";
-      z.style.left = "0px";
+      options.style.display = "none";
+      container.style.display = "none";
+      maps.style.left = "0px";
     }
   };
 
