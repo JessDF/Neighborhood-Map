@@ -156,9 +156,9 @@ function hideMarkers(markers) {
 //Get wiki articles
 function getWiki(infowindow, marker) {
   //Adds title in info window
-  infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+  infowindow.setContent('<div>' + marker.title + '</div><div id="pano">');
   // Wikipedia AJAX request (Cross-site Request - JSONP )
-  var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
+  var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
   //If request times out, says "failed to load resources"
   var wikiRequestTimeout = setTimeout(function() {
     infowindow.setContent(infowindow.getContent() + "<br> Failed to get Wikipedia resources");
@@ -174,6 +174,7 @@ function getWiki(infowindow, marker) {
         var url = 'http://en.wikipedia.org/wiki/' + articleStr;
         infowindow.setContent(infowindow.getContent() + '<li><a href="' + url + '">' + articleStr + '</a></li>');
       }
+      infowindow.setContent(infowindow.getContent() + '</div>');
 
       clearTimeout(wikiRequestTimeout);
     }
@@ -240,6 +241,22 @@ var ViewModel = function() {
     var title = locations[i].title;
     this.locationsList.push(title);
   }
+
+  //When clicked: Show side menu
+  this.showOptions = function() {
+    var x = document.getElementById("optionsBox");
+    var y = document.getElementById("containerBox");
+    var z = document.getElementById("map");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+      y.style.display = "block";
+      z.style.left = "362px";
+    } else {
+      x.style.display = "none";
+      y.style.display = "none";
+      z.style.left = "0px";
+    }
+  };
 
   //When "Show Places" button clicked this function called
   this.showPlaces = function() {

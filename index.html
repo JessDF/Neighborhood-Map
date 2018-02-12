@@ -10,8 +10,9 @@
 
 <body>
   <!-- HTML for Project -->
-  <div class="container">
-    <div class="options-box">
+  <button id="show-options" data-bind="click: showOptions">Options</button>
+  <div class="container" id="containerBox">
+    <div class="options-box" id="optionsBox">
       <h1>Monterey, CA</h1>
       <!-- Form for user to filter results -->
       <input id="search-box" data-bind="value: searchTerm, valueUpdate: ['keyup'], event: { keyup: doSearch }" placeholder="search - press enter" autocomplete="off" />
@@ -27,11 +28,10 @@
         <li><button class="listButton" data-bind="text:$data, click: $parent.showLocation"></button></li>
       </ul>
     </div>
-
-    <div id="map">If you can read this, there's an error loading Google Maps.</div>
   </div>
+  <div id="map">If you can read this, there's an error loading Google Maps.</div>
   <!-- JavaScript Links -->
-  <script src="js/libs/jquery.min.js"></script>
+  <script src="js/lib/jquery.min.js"></script>
   <script src="js/lib/knockout-3.2.0.js"></script>
   <script src="js/app.js"></script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyA1q7Qw9MDJWszBq1Ta5-geA01e8rnyuhk&v=3&callback=startApp" onerror="googleError()"></script>

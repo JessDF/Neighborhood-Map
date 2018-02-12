@@ -53,6 +53,12 @@ hr {
   width: 340px;
 }
 
+#show-options {
+  width: 10%;
+  position: relative;
+  z-index: 999;
+}
+
 #pano {
   width: 300px;
   height: 300px;
