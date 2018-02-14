@@ -51,19 +51,24 @@ function makeMarkerIcon(markerColor) {
     new google.maps.Size(21, 34));
   return markerImage;
 }
+// Function that will bounce marker when it's been clicked
+function toggleBounce(marker) {
+  if (marker.getAnimation() !== null) {
+    marker.setAnimation(null);
+  } else {
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(function() {
+      marker.setAnimation(null);
+    }, 2000);
+  }
+}
 // Function to create listner on makers for info windows within the initMap Function
 function funInitAddListner(marker, largeInfowindow) {
+  //Create the listner and color for marker state
   marker.addListener('click', function() {
     populateInfoWindow(this, largeInfowindow);
-  });
-  //Create the listners and colors for marker animation
-  var defaultIcon = makeMarkerIcon('0091ff');
-  var highlightedIcon = makeMarkerIcon('FFFF24');
-  marker.addListener('mouseover', function() {
-    this.setIcon(highlightedIcon);
-  });
-  marker.addListener('mouseout', function() {
-    this.setIcon(defaultIcon);
+    //this.setIcon(makeMarkerIcon('FFFF24'));
+    toggleBounce(this);
   });
 }
 // Function to initiate map, and create a new map and markers
@@ -113,48 +118,6 @@ function showListings() {
   map.fitBounds(bounds);
 }
 
-// Function sets panorama for streetview when marker clicked
-//var panorama;
-function getStreetView(infowindow, marker) {
-  //Adds title in info window
-  infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
-  var panoramaOptions = {
-    position: marker.position,
-    pov: {
-      heading: 100,
-      pitch: 15
-    }
-  };
-  //Creates the streetview panorama using the above options
-  var panorama = new google.maps.StreetViewPanorama(
-    document.getElementById('pano'), panoramaOptions);
-}
-// Function that populate the info window of clicked markers
-// Only one marker will be open at a time
-function populateInfoWindow(marker, infowindow) {
-  // Check to make sure the infowindow is not already opened on this marker.
-  if (infowindow.marker != marker) {
-    infowindow.marker = marker;
-    infowindow.setContent('<div>' + marker.title + '</div>');
-    infowindow.open(map, marker);
-    infowindow.addListener('closeclick', function() {
-      infowindow.setMarker = null;
-    });
-
-    //Gets the street view and sets panorama
-    getStreetView(infowindow, marker);
-    // Opens for the correct marker
-    infowindow.open(map, marker);
-  }
-}
-
-// Hides the markers for the "hide places" button and when filtering
-function hideMarkers(markers) {
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(null);
-  }
-}
-
 //Get wiki articles
 function getWiki(infowindow, marker) {
   //Adds title in info window
@@ -168,7 +131,6 @@ function getWiki(infowindow, marker) {
   $.ajax({
     url: wikiUrl,
     dataType: "jsonp",
-    //jsonp: "callback",
     success: function(response) {
       var articleList = response[1];
       for (var i = 0; i < articleList.length; i++) {
@@ -177,15 +139,15 @@ function getWiki(infowindow, marker) {
         infowindow.setContent(infowindow.getContent() + '<li><a href="' + url + '">' + articleStr + '</a></li>');
       }
       infowindow.setContent(infowindow.getContent() + '</div>');
-
       clearTimeout(wikiRequestTimeout);
     }
   });
 }
 
-//When user filters the places, gets the wiki pages for the place when marker clicked
-function getPlacesDetails(marker, infowindow) {
-  // Check to make sure the infowindow is not already opened on this marker.
+
+// Function that populate the info window of clicked markers
+// Only one marker will be open at a time
+function populateInfoWindow(marker, infowindow) {
   // Check to make sure the infowindow is not already opened on this marker.
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
@@ -201,15 +163,12 @@ function getPlacesDetails(marker, infowindow) {
     infowindow.open(map, marker);
   }
 }
-// Function to add the event lisnters for the createMakersForPlaces function
-function createMarkersListner(marker, placeInfoWindow) {
-  marker.addListener('click', function() {
-    if (placeInfoWindow.marker == marker) {
-      console.log("This infowindow already is on this marker!");
-    } else {
-      getPlacesDetails(marker, placeInfoWindow);
-    }
-  });
+
+// Hides the markers for the "hide places" button and when filtering
+function hideMarkers(markers) {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(null);
+  }
 }
 
 //Create marker for filtering and calls function to init window and wiki
@@ -222,8 +181,7 @@ function filterSearch(place) {
     if (markers[i].title == place.title) {
       var marker = markers[i];
       flag = true;
-      //Call listner and add markers to map
-      createMarkersListner(marker, largeInfowindow);
+      populateInfoWindow(marker, largeInfowindow);
       marker.setMap(map);
       bounds.extend(place.location);
       map.fitBounds(bounds);
@@ -323,8 +281,12 @@ var ViewModel = function() {
     // Grabs user input and test that it's not empty
     var search = this.searchTerm();
     if (search === "") {
-      window.alert('You must enter an area, or address.');
-      return;
+      // Loads all of the locations into the list
+      for (var i = 0; i < locations.length; i++) {
+        var title = locations[i].title;
+        this.locationsList.push(title);
+      }
+      showListings();
     } else {
       // Clears out locations list and updates with places that match users input
       self.locationsList.removeAll();
