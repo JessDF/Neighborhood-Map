@@ -280,10 +280,11 @@ var ViewModel = function() {
   this.doSearch = function() {
     // Grabs user input and test that it's not empty
     var search = this.searchTerm();
+    var title;
     if (search === "") {
       // Loads all of the locations into the list
       for (var i = 0; i < locations.length; i++) {
-        var title = locations[i].title;
+        title = locations[i].title;
         this.locationsList.push(title);
       }
       showListings();
@@ -297,7 +298,7 @@ var ViewModel = function() {
 
       // For locations that match the users filtering
       for (var x in locations) {
-        var title = locations[x].title;
+        title = locations[x].title;
         if (locations[x].title.toLowerCase().indexOf(search.toLowerCase()) >= 0) {
           // Adds to the list
           self.locationsList.push(title);
