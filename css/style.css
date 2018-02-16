@@ -9,6 +9,7 @@ body {
 .container {
   height: 91%;
   position: relative;
+  z-index: 2;
 }
 
 input {
@@ -37,7 +38,7 @@ hr {
 #map {
   bottom: 0px;
   height: 100%;
-  left: 362px;
+  left: 0px;
   position: absolute;
   right: 0px;
 }
@@ -54,7 +55,6 @@ hr {
 }
 
 #show-options {
-  width: 10%;
   position: relative;
   z-index: 999;
 }

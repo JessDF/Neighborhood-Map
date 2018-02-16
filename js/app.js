@@ -1,8 +1,7 @@
 //Global variable to use throughout program
 var map;
 var markers = [];
-var polygon = null;
-var placeMarkers = [];
+var largeInfowindow;
 var locations = [
   {
     title: 'Monterey Bay Aquarium',
@@ -51,7 +50,7 @@ function makeMarkerIcon(markerColor) {
     new google.maps.Size(21, 34));
   return markerImage;
 }
-// Function that will bounce marker when it's been clicked
+// Function that will b bounce marker when it's been clicked
 function toggleBounce(marker) {
   if (marker.getAnimation() !== null) {
     marker.setAnimation(null);
@@ -66,9 +65,8 @@ function toggleBounce(marker) {
 function funInitAddListner(marker, largeInfowindow) {
   //Create the listner and color for marker state
   marker.addListener('click', function() {
-    populateInfoWindow(this, largeInfowindow);
-    //this.setIcon(makeMarkerIcon('FFFF24'));
-    toggleBounce(this);
+    populateInfoWindow(marker, largeInfowindow);
+    toggleBounce(marker);
   });
 }
 // Function to initiate map, and create a new map and markers
@@ -82,7 +80,7 @@ function initMap() {
     zoom: 13,
     mapTypeControl: false
   });
-  var largeInfowindow = new google.maps.InfoWindow();
+  largeInfowindow = new google.maps.InfoWindow();
   var bounds = new google.maps.LatLngBounds();
 
   // Use location array to create markers and push them to the map
@@ -99,7 +97,7 @@ function initMap() {
     });
 
     markers.push(marker);
-    funInitAddListner(marker, largeInfowindow);
+    funInitAddListner(markers[i], largeInfowindow);
     bounds.extend(markers[i].position);
   }
   showListings();
@@ -109,7 +107,7 @@ function initMap() {
 // Function that connects to "show places" button
 function showListings() {
   // Clears all of the markers before showing all markers on map
-  hideMarkers(placeMarkers);
+  hideMarkers(markers);
   var bounds = new google.maps.LatLngBounds();
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(map);
@@ -173,15 +171,13 @@ function hideMarkers(markers) {
 
 //Create marker for filtering and calls function to init window and wiki
 function filterSearch(place) {
-  var largeInfowindow = new google.maps.InfoWindow();
-  var bounds = new google.maps.LatLngBounds();
   var flag = false;
+  var bounds = new google.maps.LatLngBounds();
   for (var i = 0; i < markers.length; i++) {
     //Filter for place
     if (markers[i].title == place.title) {
       var marker = markers[i];
       flag = true;
-      populateInfoWindow(marker, largeInfowindow);
       marker.setMap(map);
       bounds.extend(place.location);
       map.fitBounds(bounds);
@@ -211,15 +207,12 @@ var ViewModel = function() {
   this.showOptions = function() {
     var options = document.getElementById("optionsBox");
     var container = document.getElementById("containerBox");
-    var maps = document.getElementById("map");
     if (options.style.display === "none") {
       options.style.display = "block";
       container.style.display = "block";
-      maps.style.left = "362px";
     } else {
       options.style.display = "none";
       container.style.display = "none";
-      maps.style.left = "0px";
     }
   };
 
@@ -246,8 +239,6 @@ var ViewModel = function() {
       this.locationsList.push(title);
     }
 
-    // Calls function to hide special markers from filtering
-    hideMarkers(placeMarkers);
     // Calls function to hide all normal markers
     hideMarkers(markers);
   };
@@ -257,16 +248,14 @@ var ViewModel = function() {
     // Clears out locations list and updates with places that match users input
     self.locationsList.removeAll();
     var search = this;
-    for (var i in markers) {
+    for (var i = 0; i < markers.length; i++) {
       markers[i].setMap(null);
     }
-    // Calls function to hide special markers from filtering
-    hideMarkers(placeMarkers);
     // Calls function to hide all normal markers
     hideMarkers(markers);
 
     // For locations that match the users filtering
-    for (var x in locations) {
+    for (var x = 0; x < locations.length; x++) {
       var title = locations[x].title;
       if (locations[x].title.toLowerCase().indexOf(search.toLowerCase()) >= 0) {
         // Adds to the list
@@ -282,6 +271,7 @@ var ViewModel = function() {
     var search = this.searchTerm();
     var title;
     if (search === "") {
+      this.locationsList.removeAll();
       // Loads all of the locations into the list
       for (var i = 0; i < locations.length; i++) {
         title = locations[i].title;
@@ -291,13 +281,11 @@ var ViewModel = function() {
     } else {
       // Clears out locations list and updates with places that match users input
       self.locationsList.removeAll();
-      // Calls function to hide special markers from filtering
-      hideMarkers(placeMarkers);
       // Calls function to hide all normal markers
       hideMarkers(markers);
 
       // For locations that match the users filtering
-      for (var x in locations) {
+      for (var x = 0; x < locations.length; x++) {
         title = locations[x].title;
         if (locations[x].title.toLowerCase().indexOf(search.toLowerCase()) >= 0) {
           // Adds to the list
