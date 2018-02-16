@@ -10,6 +10,7 @@ body {
   height: 91%;
   position: relative;
   z-index: 2;
+  width: 300px;
 }
 
 input {
@@ -38,7 +39,7 @@ hr {
 #map {
   bottom: 0px;
   height: 100%;
-  left: 0px;
+  left: 0;
   position: absolute;
   right: 0px;
 }

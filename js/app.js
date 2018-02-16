@@ -62,10 +62,10 @@ function toggleBounce(marker) {
   }
 }
 // Function to create listner on makers for info windows within the initMap Function
-function funInitAddListner(marker, largeInfowindow) {
+function funInitAddListner(marker, infowindow) {
   //Create the listner and color for marker state
   marker.addListener('click', function() {
-    populateInfoWindow(marker, largeInfowindow);
+    populateInfoWindow(marker, infowindow);
     toggleBounce(marker);
   });
 }
