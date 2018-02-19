@@ -137,7 +137,7 @@ function getWiki(infowindow, marker) {
     infowindow.setContent(infowindow.getContent() + '</div>');
   }).fail(function(jqXHR, textStatus) {
     // error handling
-    infowindow.setContent(infowindow.getContent() + "<br> Failed to get Wikipedia resources");
+    infowindow.setContent(infowindow.getContent() + "<br> Failed to get Wikipedia resources</div>");
   });
 }
 
@@ -247,21 +247,17 @@ var ViewModel = function() {
     // Clears out locations list and updates with places that match users input
     self.locationsList.removeAll();
     var search = this;
-    for (var i = 0; i < markers.length; i++) {
-      markers[i].setMap(null);
-    }
-    // Calls function to hide all normal markers
-    hideMarkers(markers);
-
-    // For locations that match the users filtering
+    // Search through the different locations
     for (var x = 0; x < locations.length; x++) {
       var title = locations[x].title;
+      // Finds the filtered item in list
       if (locations[x].title.toLowerCase().indexOf(search.toLowerCase()) >= 0) {
-        // Adds to the list
+        // Adds to the list the filtered item
         self.locationsList.push(title);
-
-        //Add markers to places
-        filterSearch(locations[x]);
+        // Sets marker to clicked and opens infowindow
+        google.maps.event.trigger(markers[x], 'click');
+      } else {
+        markers[x].setMap(null);
       }
     }
   };
@@ -280,8 +276,6 @@ var ViewModel = function() {
     } else {
       // Clears out locations list and updates with places that match users input
       self.locationsList.removeAll();
-      // Calls function to hide all normal markers
-      hideMarkers(markers);
 
       // For locations that match the users filtering
       for (var x = 0; x < locations.length; x++) {
@@ -289,9 +283,10 @@ var ViewModel = function() {
         if (locations[x].title.toLowerCase().indexOf(search.toLowerCase()) >= 0) {
           // Adds to the list
           self.locationsList.push(title);
-
-          // Add markers to places
+          // Find correct location
           filterSearch(locations[x]);
+        } else {
+          markers[x].setMap(null);
         }
       }
     }
