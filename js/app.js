@@ -122,23 +122,22 @@ function getWiki(infowindow, marker) {
   infowindow.setContent('<div>' + marker.title + '</div><div id="pano">');
   // Wikipedia AJAX request (Cross-site Request - JSONP )
   var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
-  //If request times out, says "failed to load resources"
-  var wikiRequestTimeout = setTimeout(function() {
-    infowindow.setContent(infowindow.getContent() + "<br> Failed to get Wikipedia resources");
-  }, 8000);
   $.ajax({
+    // ajax settings
     url: wikiUrl,
-    dataType: "jsonp",
-    success: function(response) {
-      var articleList = response[1];
-      for (var i = 0; i < articleList.length; i++) {
-        var articleStr = articleList[i];
-        var url = 'http://en.wikipedia.org/wiki/' + articleStr;
-        infowindow.setContent(infowindow.getContent() + '<li><a href="' + url + '">' + articleStr + '</a></li>');
-      }
-      infowindow.setContent(infowindow.getContent() + '</div>');
-      clearTimeout(wikiRequestTimeout);
+    dataType: "jsonp"
+  }).done(function(data) {
+    // successful
+    var articleList = data[1];
+    for (var i = 0; i < articleList.length; i++) {
+      var articleStr = articleList[i];
+      var url = 'http://en.wikipedia.org/wiki/' + articleStr;
+      infowindow.setContent(infowindow.getContent() + '<li><a href="' + url + '">' + articleStr + '</a></li>');
     }
+    infowindow.setContent(infowindow.getContent() + '</div>');
+  }).fail(function(jqXHR, textStatus) {
+    // error handling
+    infowindow.setContent(infowindow.getContent() + "<br> Failed to get Wikipedia resources");
   });
 }
 
